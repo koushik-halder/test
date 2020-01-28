@@ -1,0 +1,56 @@
+
+import React, { Component } from 'react'
+// import {selectSong} from '../action'
+// import Songlist from './component/Songlist';
+import Planet from './Planet';
+import axios from 'axios';
+
+export default class App extends Component {
+  state = {
+      isLoading: true,
+      subCategory: [],
+      error: null
+    };
+
+    fetchUsers() {
+        fetch("https://jsonplaceholder.typicode.com/users")
+          .then(response => response.json())
+          .then(data =>
+            this.setState({
+              subCategory: data,
+              isLoading: false,
+            })
+          )
+          .catch(error => this.setState({ error, isLoading: false }));
+      }
+
+      componentDidMount() {
+        this.fetchUsers();
+      }
+
+  render() {
+    const { isLoading, subCategory, error } = this.state;
+    return (
+      <div>
+      <React.Fragment>
+        <h1>Random User</h1>
+        {error ? <p>{error.message}</p> : null}
+        {!isLoading ? (
+          subCategory.map(user => {
+            const { username, name, email } = user;
+            return (
+              <div key={username}>
+                <p>Name: {name}</p>
+                <p>Email Address: {email}</p>
+                <hr />
+              </div>
+            );
+          })
+        ) : (
+          <h3>Loading...</h3>
+        )}
+      </React.Fragment>
+      </div>
+    )
+  }
+}
